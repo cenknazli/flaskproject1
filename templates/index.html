@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+      <!-- Custom Styles -->
+      <link rel="stylesheet" href="static/styles/styles.css">
+
+      <!-- Google Fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates" rel="stylesheet">
+
+      <title>BookReview</title>
+    </head>
+
+    <body>
+      <div class="row titleRow">
+        <div class="headTitle">
+          <h1>Meet your next favorite book!</h1>
+          <h4>See bunch of book reviews and discussions to decide what to read next.</h4>
+        </div>
+      </div>
+      <div class="row formRow">
+        <form class="authForm" action="{{ url_for('regSuccess') }}" method="POST">
+          <h3>Register / Log In</h3>
+          <input type="email" class="form-control" name="authFormEmail" placeholder="email">
+          <input type="password" class="form-control" name="authFormPassword" placeholder="password">
+          <input type="submit" class="btn btn-primary" name="authButton" value="Sign Up / Log In">
+        </form>
+      </div>
+    </body>
+
+</html>
