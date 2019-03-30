@@ -24,8 +24,40 @@ db = scoped_session(sessionmaker(bind=engine))
 def index():
     return render_template("index.html")
 
-@app.route("/register", methods=["POST"])
-def regSuccess():
+@app.route("/authentication", methods=["POST"])
+def authSuccess():
+    # Get email and password from the form
     email = request.form.get("authFormEmail")
     password = request.form.get("authFormPassword")
-    return render_template("register.html", email=email, password=password)
+
+    if authenticateUser(email, password) == 1:
+        return render_template("authentication.html", result="Successfully Registered")
+    elif authenticateUser(email, password) == -1:
+        return render_template("authentication.html", result="Error! Something went wrong while inserting data to database")
+    elif authenticateUser(email, password) == 2:
+        return render_template("authentication.html", result="User logged in succesfully")
+    elif authenticateUser(email, password) == -2:
+        return render_template("authentication.html", result="Error! Password is wrong")
+    else:
+        return render_template("failure.html", result="Error! What the hell is going on!")
+
+def authenticateUser(email, password):
+    # Check if email is exist in db
+    user = db.execute("SELECT user_id FROM users WHERE email = :email",
+            {"email": email}).fetchone()
+
+    if user is None:
+        db.execute("INSERT INTO users (email, password) VALUES (:email, :password)",
+                    {"email": email, "password": password})
+        try:
+            db.commit()
+            return 1
+        except:
+            return -1
+    else:
+        user =  db.execute("SELECT user_id FROM users WHERE password = :password AND email = :email",
+                {"password": password, "email": email}).fetchone()
+        if user is None:
+            return -2
+        else:
+            return 2
