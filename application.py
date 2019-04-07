@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, render_template, request
+from flask import Flask, session, render_template, request, redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -30,34 +30,39 @@ def authSuccess():
     email = request.form.get("authFormEmail")
     password = request.form.get("authFormPassword")
 
-    if authenticateUser(email, password) == 1:
+    if authenticateUser(email, password) == "Registered":
         return render_template("authentication.html", result="Successfully Registered")
-    elif authenticateUser(email, password) == -1:
+    elif authenticateUser(email, password) == "DB Error":
         return render_template("authentication.html", result="Error! Something went wrong while inserting data to database")
-    elif authenticateUser(email, password) == 2:
+    elif authenticateUser(email, password) == "LoggedIn":
         return render_template("authentication.html", result="User logged in succesfully")
-    elif authenticateUser(email, password) == -2:
+    elif authenticateUser(email, password) == "WrongPassword":
         return render_template("authentication.html", result="Error! Password is wrong")
     else:
         return render_template("failure.html", result="Error! What the hell is going on!")
 
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.pop('user', None)
+    return redirect('/')
+
 def authenticateUser(email, password):
-    # Check if email is exist in db
-    user = db.execute("SELECT user_id FROM users WHERE email = :email",
+    # Check if email exists in db
+    userID = db.execute("SELECT user_id FROM users WHERE email = :email",
             {"email": email}).fetchone()
 
-    if user is None:
+    if userID is None:
         db.execute("INSERT INTO users (email, password) VALUES (:email, :password)",
                     {"email": email, "password": password})
         try:
             db.commit()
-            return 1
+            return "Registered"
         except:
-            return -1
+            return "DB_Error"
     else:
-        user =  db.execute("SELECT user_id FROM users WHERE password = :password AND email = :email",
-                {"password": password, "email": email}).fetchone()
-        if user is None:
-            return -2
+        userID = db.execute("SELECT user_id FROM users WHERE email = :email and password = :password",
+                {"email": email, "password": password}).fetchone()
+        if userID:
+            return "LoggedIn"
         else:
-            return 2
+            return "WrongPassword"
