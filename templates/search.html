@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+  <div class="container-fluid searchContainer">
+    <form class="searchForm form-inline" action="{{ url_for('search') }}" method="POST">
+      <input type="text" class="form-control" name="searchBox" placeholder="Enter ISBN, Author or Title">
+      <input type="submit" class="btn btn-primary" name="searchButton" value="Find Book">
+    </form>
+    {% if showTable %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Isbn</th>
+            <th scope="col">Author</th>
+            <th scope="col">Title</th>
+            <th scope="col">Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+            <tr>
+              <td><a href="{{ url_for('bookDetail', isbn=result.isbn) }}">{{ result[0] }}</a></td>
+              <td>{{ result[1] }}</td>
+              <td>{{ result[2] }}</td>
+              <td>{{ result[3] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+  {% if not showTable %}
+    <div class="container-fluid"><h5 class="searchErrorText">{{ results }}</h5></div>
+  {% endif %}
+
+{% endblock %}

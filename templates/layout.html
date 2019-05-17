@@ -2,6 +2,7 @@
 <html>
 
     <head>
+      {% block head %}
       <!-- Required meta tags -->
       <meta charset="utf-8">
 
@@ -15,15 +16,18 @@
       <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates" rel="stylesheet">
 
       <title>BookReview</title>
+      {% endblock %}
     </head>
 
     <body>
       <div class="container-fluid">
         <nav class="navbar navbar-expand-sm">
           <!--Links-->
-          <ul class="nav navbar-nav mr-auto">
+          <ul class="nav navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/">Register/Log In</a>
+              <form class="" action="{{ url_for('logout') }}" method="POST">
+                <input type="submit" class="btn btn-link" name="logoutButton" value="Log Out">
+              </form>
             </li>
           </ul>
         </nav>
@@ -32,15 +36,7 @@
         <h1>Meet your next favorite book!</h1>
         <h4>See bunch of book reviews and discussions to decide what to read next.</h4>
       </div>
-      <div class="container-fluid">
-        <form class="authForm" action="{{ url_for('authSuccess') }}" method="POST">
-          <h3>Register / Log In</h3>
-          <input type="email" class="form-control" name="authFormEmail" placeholder="email">
-          <input type="password" class="form-control" name="authFormPassword" placeholder="password">
-          <input type="submit" class="btn btn-primary" name="authButton" value="Sign Up / Log In">
-        </form>
-      </div>
-      <div class="container-fluid"><h5 class="authErrorText">{{ result }}</h5></div>
+      {% block body %}{% endblock %}
     </body>
 
 </html>

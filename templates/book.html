@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <div class="container-fluid searchContainer">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Isbn</th>
+          <th scope="col">Author</th>
+          <th scope="col">Title</th>
+          <th scope="col">Year</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ bookDetails.isbn }}</td>
+          <td>{{ bookDetails.author }}</td>
+          <td>{{ bookDetails.title }}</td>
+          <td>{{ bookDetails.year }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="container-fluid bookReview">
+    <h5>Book Rating by Goodreads</h5>
+    <h5> Average Rating: {{ bookRatingGoodreads }} </h5>
+    <h5> # of Reviews: {{ countOfReviews }} </h5>
+  </div>
+  {% if not existingComments %}
+    <div class="container-fluid ratingCombo">
+      <h5>Rate the Book</h5>
+      <select name="rates">
+        <option value=1 selected>1</option>
+        <option value=2>2</option>
+        <option value=3>3</option>
+        <option value=4>4</option>
+        <option value=5>5</option>
+      </select>
+    </div>
+    <div class="container-fluid commentContainer">
+      <form class="commentForm" action="{{ url_for ('comment', isbn=session['isbn']) }}" method="POST">
+        <textarea class="form-control commentBox" name="commentText" placeholder="Write your thoughts about the book to share with people." cols="30" rows="10"></textarea>
+        <input type="submit" class="btn btn-primary" name="shareButton" value="Share">
+      </form>
+    </div>
+  {% else %}
+    <div class="container-fluid bookReview">
+      <h5>Book Reviews by Users</h5>
+      {% for comment in existingComments %}
+        <h6> {{ comment.email+'-'+comment.comment }} </h6>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

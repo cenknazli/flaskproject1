@@ -9,7 +9,7 @@
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
       <!-- Custom Styles -->
-      <link rel="stylesheet" href="static/styles/styles.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
       <!-- Google Fonts -->
       <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates" rel="stylesheet">
@@ -18,10 +18,29 @@
     </head>
 
     <body>
-      <h1>{{ result }}</h1>
-      <form class="authForm" action="{{ url_for('logout') }}" method="POST">
-        <input type="submit" class="btn btn-primary" name="logoutButton" value="Log Out">
-      </form>
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm">
+          <!--Links-->
+          <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+              <form class="" action="{{ url_for('logout') }}" method="POST">
+                <input type="submit" class="btn btn-link" name="logoutButton" value="Log Out">
+              </form>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="container-fluid headTitle">
+        <h1>Meet your next favorite book!</h1>
+        <h4>See bunch of book reviews and discussions to decide what to read next.</h4>
+      </div>
+      <div class="container-fluid searchContainer">
+        <form class="searchForm form-inline" action="{{ url_for('search') }}" method="POST">
+          <input type="text" class="form-control" name="searchBox" placeholder="Enter ISBN, Author or Title">
+          <input type="submit" class="btn btn-primary" name="searchButton" value="Find Book">
+        </form>
+      </div>
+      <div class="container-fluid"><h5 class="searchErrorText">{{ results }}</h5></div>
     </body>
 
-    </html>
+</html>
